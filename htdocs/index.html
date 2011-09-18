@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+
+   <title>Cron Timelines</title>
+   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+   <script src="/cronline/timeline/timeline_js/timeline-api.js?bundle=true" type="text/javascript"></script>
+
+   <style>
+	html {background-color: #333; }
+	#doc3 {background-color: #888;color:#EEE;}
+	
+
+	#wrap1 {display: block;}
+	#hd, #ft {margin: 2em; padding-top: 2em;}
+	#ft {padding-bottom: 1em;}#bd div.yui-g {margin: 2em;}
+	h1 {color: #834c24;}
+	p {margin-top: .5em;}
+  </style>
+   <script>
+        var tl;
+        function onLoad() {
+            var tl_el = document.getElementById("tl");
+            var eventSource1 = new Timeline.DefaultEventSource();
+
+            var theme1 = Timeline.ClassicTheme.create();
+            theme1.autoWidth = true; // Set the Timeline's "width" automatically.
+                                     // Set autoWidth on the Timeline's first band's theme,
+                                     // will affect all bands.
+            theme1.timeline_start = new Date(Date.UTC(2011, 0, 1));
+            theme1.timeline_stop  = new Date(Date.UTC(2012, 0, 1));
+
+            var bandInfos = [
+                Timeline.createBandInfo({
+                    width:          45, // set to a minimum, autoWidth will then adjust
+		    timeZone:	    -7,
+                    intervalUnit:   Timeline.DateTime.DAY, 
+                    intervalPixels: 600,
+                    eventSource:    eventSource1,
+                    theme:          theme1,
+                    layout:         'original'  // original, overview, detailed
+                })
+            ];
+
+            // create the Timeline
+            tl = Timeline.create(tl_el, bandInfos, Timeline.HORIZONTAL);
+
+            //var url = 'http://tools.es-dev.local/cronline/data/';
+	    var dat = {
+		'dateTimeFormat': 'Gregorian',
+		'wikiURL': 'http://simile.mit.edu/shelf/',
+		'wikiSection': 'Simile Cubism Timeline',
+		'events' :[]
+	    };
+	    tl.loadJSON('/cronline/data/backups.js', function(json, url){
+		dat.events = dat.events.concat(json);
+	    });
+	    tl.loadJSON('/cronline/data/postgres.js', function(json, url){
+		dat.events = dat.events.concat(json);
+	    	eventSource1.loadJSON(dat, url);
+	    });
+            tl.layout(); // display the Timeline
+        }
+
+        var resizeTimerID = null;
+        function onResize() {
+            if (resizeTimerID == null) {
+                resizeTimerID = window.setTimeout(function() {
+                    resizeTimerID = null;
+                    tl.layout();
+                }, 500);
+            }
+        }
+   </script>
+
+</head>
+
+<body onload="onLoad();" onresize="onResize();">
+
+<div id="doc3" class="yui-t7">
+   <div id="bd" role="main">
+    <div class="yui-g">
+	* Annoyingly enough - you'll have to drag this timeline sideways before it expands vertically ...
+<br>
+<br>
+      <div id='tl'></div>
+<br>
+    </div>
+  </div>
+</div>
+
+</body>
+
+</html>
+
+

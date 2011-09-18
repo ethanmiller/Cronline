@@ -1,0 +1,8 @@
+#!/bin/bash
+#/usr/bin/time -f "[%C] time:%E mem:%K cpu:%P" -a -o "$HOME/bugga.log" $*
+FMT="%b %d %Y %H:%M:%S GMT%z"
+DST=/var/local/cronlines/$(whoami).log
+START=$(date -u +"$FMT")
+$*
+END=$(date -u +"$FMT")
+echo "[$*] '$START' '$END'" >> $DST
