@@ -1,0 +1,3 @@
+#!/bin/bash
+./cln_format.py /var/local/cronlines/postgres.log '#383' > /var/www/cronline/data/postgres.js
+./cln_format.py /var/local/cronlines/root.log > /var/www/cronline/data/backups.js
